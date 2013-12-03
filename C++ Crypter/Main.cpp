@@ -52,4 +52,5 @@ int main() // The main function (Entry point)
 	WriteToResources(L"Crypted.exe", 1, (BYTE *)FB, fs);//Write the encrypted data to resources
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");
+	//penguin
 }
