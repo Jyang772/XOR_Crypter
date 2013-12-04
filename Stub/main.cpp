@@ -26,7 +26,7 @@ void enc()
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Resource(1);
-	//enc();
+	enc();
 
 	LPVOID pFile;
 	TCHAR szFilePath[1024];
