@@ -1,3 +1,18 @@
+/**
+ * Research:
+ * http://stackoverflow.com/questions/20365005/c-xor-encryption
+ * 
+ * 
+ * Credits:
+ * -igitalNemesis
+ * -Grigori Perelman
+ * -MicroPenguin
+ * -Original Unknown
+ * 
+ * */
+
+
+
 #include <iostream>
 #include <Windows.h>
 #include <fstream>
@@ -45,7 +60,7 @@ void enc() // The function that Encrypts the info on the FB buffer
 
 void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) // Function that Writes Data to resources 
 {
-	// Thanks to DigitalNemesis and Grigori Perelman  From www.OpenSC.ws
+	
 	cout << "Writing Encrypted data to stub's resources\n";
 	HANDLE hResource = NULL;
 	hResource = BeginUpdateResource(szTargetPE, FALSE);
