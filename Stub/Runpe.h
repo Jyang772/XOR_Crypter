@@ -1,7 +1,7 @@
-#include <Windows.h>
-
-typedef LONG (WINAPI * NtUnmapViewOfSection)(HANDLE ProcessHandle, PVOID BaseAddress); 
-
+//#include <Windows.h>
+//
+//typedef LONG (WINAPI * NtUnmapViewOfSection)(HANDLE ProcessHandle, PVOID BaseAddress); 
+//
 //void ExecFile(LPSTR szFilePath, LPVOID pFile)
 //{
 //PIMAGE_DOS_HEADER IDH;

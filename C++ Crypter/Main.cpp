@@ -1,30 +1,25 @@
-/**
- * Research:
- * 
- * http://stackoverflow.com/questions/20365005/c-xor-encryption
- * 
- * */
- 
-
 #include <iostream>
 #include <Windows.h>
-#include <fstream>
 using namespace std;
 
 char * FB; //The Buffer that will store the File's data
 DWORD fs; // We will store the File size here
+wchar_t output[MAX_PATH];
 
 void RDF() //The Function that Reads the File and Copies the stub
 {
 	DWORD bt;
 	wchar_t name[MAX_PATH]; // We will store the Name of the Crypted file here
+
 	cout << "Please enter the Path of the file \nIf the file is in the same folder as the builder\nJust type the file name with an extention\nEG: Stuff.exe\n";
 	cout << "File Name: ";
 	wcin >> name; // Ask for input from the user and store that inputed value in the name variable
-	CopyFile(L"Stub.exe", L"Crypted.exe", 0);// Copy stub , so we done need to download a new one each time we crypt
+	cout << "Enter output name: ";
+	wcin >> output;
+	CopyFile(L"stub.exe", output/*L"Crypted.exe"*/, 0);// Copy stub , so we done need to download a new one each time we crypt
 	// ofcourse we can just update the resources with new data but whatever
 	cout << "\nGetting the HANDLE of the file to be crypted\n";
-	HANDLE efile = CreateFile(name, WRITE_OWNER | WRITE_DAC, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE efile = CreateFile(name, WRITE_DAC | WRITE_OWNER | GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	//^ Get the handle of the file to be crypted
 	cout << "Getting the File size\n";
 	fs = GetFileSize(efile, NULL);
@@ -40,15 +35,10 @@ void RDF() //The Function that Reads the File and Copies the stub
 }
 void enc() // The function that Encrypts the info on the FB buffer
 {
-	ofstream out("In Builder.txt");
 	cout << "Encrypting the Data\n";
-	char cipher[] = "penguin";
-	for (int i = 0; i < fs; i++)
-	{	
-			FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
-	}
-
-	out.close();
+	char cipher[] = "cipher";
+	//for (int i = 0; i < fs; i++)
+	//	FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
 }
 void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) // Function that Writes Data to resources 
 {
@@ -63,8 +53,7 @@ int main() // The main function (Entry point)
 {
 	RDF();//Read the file
 	enc();//Encrypt it 
-	WriteToResources(L"Crypted.exe", 1, (BYTE *)FB, fs);//Write the encrypted data to resources
+	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs);//Write the encrypted data to resources
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");
-	//penguin
 }
