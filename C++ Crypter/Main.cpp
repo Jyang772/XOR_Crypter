@@ -1,12 +1,4 @@
-/** Credits and Research
-*
-* 	-orkourkou     (Original)
-*	-DigitalNemesis 
-	-Grigori Perelman
-*   - Justin
-*
-*
-**/
+
 
 
 #include <iostream>
