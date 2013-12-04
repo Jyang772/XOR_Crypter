@@ -1,5 +1,10 @@
-
-
+/**
+ * Research:
+ * 
+ * http://stackoverflow.com/questions/20365005/c-xor-encryption
+ * 
+ * */
+ 
 
 #include <iostream>
 #include <Windows.h>
