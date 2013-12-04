@@ -13,17 +13,20 @@ void Resource(int id)
 	RData = (char*)LockResource(temp);
 }
 
+
 void enc()
 {
-	char cipher[] = "cipher";
-	//for (int i = 0; i < Rsize; i++)
-	//	RData[i] ^= cipher[i % strlen(cipher)];
+	char cipher[] = "penguin";
+	for (int i = 0; i < Rsize; i++)
+	{
+		RData[i] ^= cipher[i % strlen(cipher)];
+	}
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Resource(1);
-	enc();
+	//enc();
 
 	LPVOID pFile;
 	TCHAR szFilePath[1024];
