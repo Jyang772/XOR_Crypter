@@ -21,6 +21,8 @@ using namespace std;
 char * FB; //The Buffer that will store the File's data
 DWORD fs; // We will store the File size here
 wchar_t output[MAX_PATH];
+char choice[1];
+DWORD dwBytesWritten = 0;
 
 void RDF() //The Function that Reads the File and Copies the stub
 {
@@ -35,7 +37,8 @@ void RDF() //The Function that Reads the File and Copies the stub
 	CopyFile(L"stub.exe", output/*L"Crypted.exe"*/, 0);// Copy stub , so we done need to download a new one each time we crypt
 	// ofcourse we can just update the resources with new data but whatever
 	cout << "\nGetting the HANDLE of the file to be crypted\n";
-	HANDLE efile = CreateFile(name, GENERIC_ALL, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);	//^ Get the handle of the file to be crypted
+	HANDLE efile = CreateFile(name, GENERIC_ALL, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);	
+	//^ Get the handle of the file to be crypted
 	cout << "Getting the File size\n";
 	fs = GetFileSize(efile, NULL);
 	//Get its size , will need to use it for the encryption and buffer that will store that Data allocation
@@ -51,11 +54,40 @@ void RDF() //The Function that Reads the File and Copies the stub
 void enc() // The function that Encrypts the info on the FB buffer
 {
 	cout << "Encrypting the Data\n";
-	char cipher[] = "penguin";
-	for (int i = 0; i < fs; i++)
+	cout << choice[0];
+
+	switch (choice[0])
 	{
-		FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+	case '1':
+		{
+			char cipher[] = "penguin";
+			for (int i = 0; i < fs; i++)
+			{
+				FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+			}
+			}
+		break;
+	case '2':
+		return;
 	}
+}
+
+void choose_enc()
+{
+	//Asks users for encryption method
+	cout << "\n\nChoose encryption method: ";
+	cout << "1. Simple XOR" << endl;
+	cout << "2. N/A" << endl;
+	cin >> choice;
+
+	HANDLE encryption = CreateFile(L"temp.dat", GENERIC_ALL, FILE_SHARE_READ, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+	WriteFile(
+		encryption,           // open file handle
+		choice,      // start of data to write
+		strlen(choice),  // number of bytes to write
+		&dwBytesWritten, // number of bytes that were written
+		NULL);            // no overlapped structure
+	CloseHandle(encryption);
 }
 
 void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) // Function that Writes Data to resources 
@@ -70,7 +102,8 @@ void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) /
 int main() // The main function (Entry point)
 {
 	RDF();//Read the file
-	enc();//Encrypt it 
+	choose_enc();
+	//enc();//Encrypt it 
 	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs);//Write the encrypted data to resources
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");
