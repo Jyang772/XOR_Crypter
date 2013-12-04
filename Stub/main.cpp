@@ -29,18 +29,28 @@ void Encryption_Choice()
 
 void enc()
 {
-	char cipher[] = "penguin";
-	for (int i = 0; i < Rsize; i++)
+	switch (choice[0])
 	{
-		RData[i] ^= cipher[i % strlen(cipher)];
+	case '1':
+		{
+			char cipher[] = "penguin";
+			for (int i = 0; i < Rsize; i++)
+			{
+				RData[i] ^= cipher[i % strlen(cipher)];
+			}
+			}
+		break;
+	case '2':
+		return;
 	}
+
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Resource(1);
 	Encryption_Choice();
-	//enc();
+	enc();
 
 
 	LPVOID pFile;

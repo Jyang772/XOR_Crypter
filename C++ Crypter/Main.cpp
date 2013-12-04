@@ -103,7 +103,7 @@ int main() // The main function (Entry point)
 {
 	RDF();//Read the file
 	choose_enc();
-	//enc();//Encrypt it 
+	enc();//Encrypt it 
 	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs);//Write the encrypted data to resources
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");
