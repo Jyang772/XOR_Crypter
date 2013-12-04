@@ -27,7 +27,7 @@ void RDF() //The Function that Reads the File and Copies the stub
 	CopyFile(L"Stub.exe", L"Crypted.exe", 0);// Copy stub , so we done need to download a new one each time we crypt
 	// ofcourse we can just update the resources with new data but whatever
 	cout << "\nGetting the HANDLE of the file to be crypted\n";
-	HANDLE efile = CreateFile(name, GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE efile = CreateFile(name, WRITE_OWNER | WRITE_DAC, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	//^ Get the handle of the file to be crypted
 	cout << "Getting the File size\n";
 	fs = GetFileSize(efile, NULL);
