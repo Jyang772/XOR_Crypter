@@ -24,7 +24,7 @@ void enc()
 
 	for (int i = 0; i < Rsize; i++)
 	{
-		out << RData[i];
+		RData[i] ^= cipher[i % strlen(cipher)];
 	}
 	out.close();
 }

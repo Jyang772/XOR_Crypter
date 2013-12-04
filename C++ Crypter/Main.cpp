@@ -48,8 +48,7 @@ void enc() // The function that Encrypts the info on the FB buffer
 	char cipher[] = "penguin";
 	for (int i = 0; i < fs; i++)
 	{	
-		out << FB[i];
-		//	FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+			FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
 	}
 
 	out.close();
