@@ -6,8 +6,11 @@
 
 
 int Rsize;
+int choice_size;
 char* RData;
+char* balls;
 std::string choice;
+
 
 void Resource(int id)
 {
@@ -17,45 +20,41 @@ void Resource(int id)
 	RData = (char*)LockResource(temp);
 }
 
-void Encryption_Choice()
-{
-	std::ifstream in("temp.dat");
-	getline(in, choice);
-	in.close();
-	std::ofstream out("From temp.dat");
-	out << choice;
-	out.close();
-}
 
 void enc()
 {
-	switch (choice[0])
+	if (RData[strlen(RData) - 1] == '1')
 	{
-	case '1':
-		{
-			char cipher[] = "penguin";
-			for (int i = 0; i < Rsize; i++)
-			{
-				RData[i] ^= cipher[i % strlen(cipher)];
-			}
-			}
-		break;
-	case '2':
-		return;
+		std::ofstream out("1.txt");
+		out << RData[strlen(RData) - 1];
+		out.close();
 	}
-
+	else if (RData[strlen(RData) - 1] == '2')
+	{
+		char cipher[] = "penguin";
+		for (int i = 0; i < Rsize-1; i++)
+		{
+			RData[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+		}
+	}
+	else if (RData[strlen(RData) - 1] == '3')
+	{
+		std::ofstream out("3.txt");
+		out << RData[strlen(RData) - 1];
+		out.close();
+	}
+		return;
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Resource(1);
-	Encryption_Choice();
 	enc();
 
 
 	LPVOID pFile;
 	TCHAR szFilePath[1024];
-
+	
 	pFile = RData;
 	if (pFile)
 	{

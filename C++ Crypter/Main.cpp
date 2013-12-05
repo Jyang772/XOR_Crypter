@@ -12,7 +12,7 @@
  * */
 
 
-
+#pragma warning (disable:4996)
 #include <iostream>
 #include <Windows.h>
 #include <fstream>
@@ -46,7 +46,7 @@ void RDF() //The Function that Reads the File and Copies the stub
 	cout << fs;
 	cout << " Bytes\n";
 	cout << "Allocating Memory for the ReadFile function\n";
-	FB = new char[fs];// Allocate the exact ammount of space 
+	FB = new char[fs+1];// Allocate the exact ammount of space 
 	cout << "Reading the file\n";
 	ReadFile(efile, FB, fs, &bt, NULL);//Read the file (put the files data in to a FB buffer)
 	CloseHandle(efile);//close the handle
@@ -54,40 +54,39 @@ void RDF() //The Function that Reads the File and Copies the stub
 void enc() // The function that Encrypts the info on the FB buffer
 {
 	cout << "Encrypting the Data\n";
-	cout << choice[0];
 
 	switch (choice[0])
 	{
 	case '1':
-		{
-			char cipher[] = "penguin";
-			for (int i = 0; i < fs; i++)
-			{
-				FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
-			}
-			}
+		return;
 		break;
 	case '2':
-		return;
+		{
+				char cipher[] = "penguin";
+				for (int i = 0; i < fs; i++)
+				{
+					FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+				}
+		}
+		break;
 	}
 }
 
 void choose_enc()
 {
 	//Asks users for encryption method
-	cout << "\n\nChoose encryption method: ";
-	cout << "1. Simple XOR" << endl;
-	cout << "2. N/A" << endl;
+	cout << "\n\nChoose encryption method: " << endl;
+	cout << "1. N/A" << endl;
+	cout << "2. Simple XOR" << endl;
 	cin >> choice;
-
-	HANDLE encryption = CreateFile(L"temp.dat", GENERIC_ALL, FILE_SHARE_READ, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
-	WriteFile(
-		encryption,           // open file handle
-		choice,      // start of data to write
-		strlen(choice),  // number of bytes to write
-		&dwBytesWritten, // number of bytes that were written
-		NULL);            // no overlapped structure
-	CloseHandle(encryption);
+	//HANDLE encryption = CreateFile(L"temp.dat", GENERIC_ALL, FILE_SHARE_READ, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+	//WriteFile(
+	//	encryption,           // open file handle
+	//	choice,      // start of data to write
+	//	strlen(choice),  // number of bytes to write
+	//	&dwBytesWritten, // number of bytes that were written
+	//	NULL);            // no overlapped structure
+	//CloseHandle(encryption);
 }
 
 void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) // Function that Writes Data to resources 
@@ -101,10 +100,14 @@ void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) /
 }
 int main() // The main function (Entry point)
 {
-	RDF();//Read the file
+	RDF(); //Read the file
 	choose_enc();
-	enc();//Encrypt it 
-	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs);//Write the encrypted data to resources
+	enc(); //Encrypt it 
+	strcat(FB, choice);
+	cout << FB[strlen(FB)-1] << endl;
+	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs+1);//Write the encrypted data to resources
+	//WriteToResources(L"temp.dat", 1, (BYTE *)choice, dwBytesWritten);
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");
 }
+;
