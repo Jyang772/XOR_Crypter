@@ -8,7 +8,6 @@
 int Rsize;
 int choice_size;
 char* RData;
-char* balls;
 std::string choice;
 
 
@@ -23,25 +22,23 @@ void Resource(int id)
 
 void enc()
 {
-	if (RData[strlen(RData) - 1] == '1')
+	switch (RData[strlen(RData)-1])
 	{
-		std::ofstream out("1.txt");
-		out << RData[strlen(RData) - 1];
-		out.close();
-	}
-	else if (RData[strlen(RData) - 1] == '2')
-	{
-		char cipher[] = "penguin";
-		for (int i = 0; i < Rsize-1; i++)
-		{
-			RData[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
+	case '1':
+		{		
 		}
-	}
-	else if (RData[strlen(RData) - 1] == '3')
-	{
-		std::ofstream out("3.txt");
-		out << RData[strlen(RData) - 1];
-		out.close();
+			break;
+	case '2':
+		{	char cipher[] = "penguin";
+			for (int i = 0; i < Rsize; i++)
+			RData[i] ^= cipher[i % strlen(cipher)];			
+			}												// Simple Xor chiper
+				break; 
+	case '3':
+		{	std::ofstream out("3.txt");
+			out.close();
+		}
+		break;
 	}
 		return;
 }

