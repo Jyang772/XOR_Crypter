@@ -47,6 +47,8 @@ either expressed or implied, of the FreeBSD Project.
 #include <iostream>
 #include <Windows.h>
 #include <fstream>
+#include <vector>
+#include <string>
 using namespace std;
 
 char * FB; //The Buffer that will store the File's data
@@ -56,11 +58,12 @@ char choice[1];
 DWORD dwBytesWritten = 0;
 char name[MAX_PATH];   // We will store the Name of the Crypted file here
 
+std::vector<char> file_data;  // With your current program, make this a global.
+
 void RDF() //The Function that Reads the File and Copies the stub
 {
 	DWORD bt;
-									
-
+								
 	cout << "Please enter the Path of the file \nIf the file is in the same folder as the builder\nJust type the file name with an extention\nEG: Stuff.exe\n";
 	cout << "File Name: ";
 	cin >> name; // Ask for input from the user and store that inputed value in the name variable
@@ -78,11 +81,33 @@ void RDF() //The Function that Reads the File and Copies the stub
 	cout << fs;
 	cout << " Bytes\n";
 	cout << "Allocating Memory for the ReadFile function\n";
-	FB = new char[fs];// Allocate the exact ammount of space 
+	file_data.resize(fs);  // set vector length equal to file size
 	cout << "Reading the file\n";
-	ReadFile(efile, FB, fs, &bt, NULL);//Read the file (put the files data in to a FB buffer)
+	//ReadFile(efile, FB, fs, &bt, NULL);//Read the file (put the files data in to a FB buffer)
+
+	ReadFile(efile, (LPVOID)(file_data.data()), fs, &bt, NULL);
+
 	CloseHandle(efile);//close the handle
+
+	if (fs != bt)
+		cout << "Error reading file!" << endl;
 }
+
+void xor_crypt(const std::string &key, std::vector<char> data)
+{
+	for (size_t i = 0; i != data.size(); i++)
+		data[i] ^= key[i % key.size()];
+}
+
+void choose_enc()
+{
+	//Asks users for encryption method
+	cout << "\n\nChoose encryption method: " << endl;
+	cout << "1. N/A" << endl;
+	cout << "2. Simple XOR" << endl;
+	cin >> choice;
+}
+
 void enc() // The function that Encrypts the info on the FB buffer
 {
 	cout << "Encrypting the Data\n";
@@ -94,48 +119,11 @@ void enc() // The function that Encrypts the info on the FB buffer
 		break;
 	case '2':
 		{
+			xor_crypt("penguin", file_data); //Encrypt it
 
-				char cipher[] = "penguin";
-				ofstream out("Builder.txt");
-				for (int i = 0; i < fs; i++)
-				{
-					 FB[i] ^= cipher[i % strlen(cipher)]; // Simple Xor chiper
-				}
 		}
-		break;
-	case '3':
-		{
-			char cipher[] = "test";
-			unsigned short pl = strlen(cipher);
-			char passTable[1024];
-			for (int i = 0; i != 1024; ++i)
-				passTable[i] = cipher[i%pl];
-
-			for (unsigned long long i = 0; i != fs; i += 2)
-			{
-				FB[i] ^= passTable[i % 1024];
-			}
-
-			}
 		return;
 	}
-}
-
-void choose_enc()
-{
-	//Asks users for encryption method
-	cout << "\n\nChoose encryption method: " << endl;
-	cout << "1. N/A" << endl;
-	cout << "2. Simple XOR" << endl;
-	cin >> choice;
-	//HANDLE encryption = CreateFile(L"temp.dat", GENERIC_ALL, FILE_SHARE_READ, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
-	//WriteFile(
-	//	encryption,           // open file handle
-	//	choice,      // start of data to write
-	//	strlen(choice),  // number of bytes to write
-	//	&dwBytesWritten, // number of bytes that were written
-	//	NULL);            // no overlapped structure
-	//CloseHandle(encryption);
 }
 
 void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) // Function that Writes Data to resources 
@@ -146,14 +134,15 @@ void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) /
 	UpdateResource(hResource, RT_RCDATA, MAKEINTRESOURCE(id), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPVOID)lpBytes, dwSize);
 	EndUpdateResource(hResource, FALSE);
 }
+
 int main() // The main function (Entry point)
 {
+	std::string key = "penguin";
 	RDF(); //Read the file
 	choose_enc();
-	enc(); //Encrypt it 
-	strcat(FB, choice);
+	file_data.push_back(choice[0]);
 	cout << fs << endl;
-	WriteToResources(output/*L"Crypted.exe"*/, 1, (BYTE *)FB, fs);//Write the encrypted data to resources
+	WriteToResources(output, 1, (BYTE *)file_data.data(), file_data.size());
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");
 }
