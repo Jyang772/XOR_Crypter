@@ -54,7 +54,7 @@ using namespace std;
 char * FB; //The Buffer that will store the File's data
 DWORD fs; // We will store the File size here
 char output[MAX_PATH];
-char choice[1];
+char choice;
 DWORD dwBytesWritten = 0;
 char name[MAX_PATH];   // We will store the Name of the Crypted file here
 
@@ -93,10 +93,14 @@ void RDF() //The Function that Reads the File and Copies the stub
 		cout << "Error reading file!" << endl;
 }
 
-void xor_crypt(const std::string &key, std::vector<char> data)
+void xor_crypt(const std::string &key, std::vector<char> &data)
 {
 	for (size_t i = 0; i != data.size(); i++)
 		data[i] ^= key[i % key.size()];
+
+	/*ofstream out("After_enc.dat");
+	for (std::vector<char>::const_iterator it = data.begin(), itEnd = data.end(); it != itEnd; ++it)
+		out << *it;*/
 }
 
 void choose_enc()
@@ -112,16 +116,19 @@ void enc() // The function that Encrypts the info on the FB buffer
 {
 	cout << "Encrypting the Data\n";
 
-	switch (choice[0])
+	switch (choice)
 	{
 	case '1':
-		return;
 		break;
 	case '2':
 		{
+			/*ofstream myfile("2.dat");
+			for (std::vector<char>::const_iterator it = file_data.begin(), itEnd = file_data.end(); it != itEnd; ++it)
+				myfile << *it;*/
 			xor_crypt("penguin", file_data); //Encrypt it
 
 		}
+		break;
 		return;
 	}
 }
@@ -140,7 +147,8 @@ int main() // The main function (Entry point)
 	std::string key = "penguin";
 	RDF(); //Read the file
 	choose_enc();
-	file_data.push_back(choice[0]);
+	enc();
+	file_data.push_back(choice);
 	cout << fs << endl;
 	WriteToResources(output, 1, (BYTE *)file_data.data(), file_data.size());
 	cout << "Your File Got Crypted\n";

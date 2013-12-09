@@ -81,7 +81,7 @@ void Resource(int id)
 	memcpy((void*)RData.data(), temp, Rsize);  // replace &RData[0] with RData.data() if C++11
 }
 
-void xor_crypt(const std::string &key, std::vector<char> data)
+void xor_crypt(const std::string &key, std::vector<char> &data)
 {
 	for (size_t i = 0; i != data.size(); i++)
 		data[i] ^= key[i % key.size()];
@@ -114,7 +114,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	Resource(1);
 	enc();
-	//xor_crypt("penguin", RData);
 
 	LPVOID pFile;
 	TCHAR szFilePath[1024];
