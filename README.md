@@ -3,12 +3,17 @@ XOR_Crypter
 
 
 This is a simple file crypter. 
+1. Reads in file data.
+2. "Encrypts" file data using XOR encryption
+3. Outputs file with encrypted data
+4. When crypted file is run, file data is decrypted in system memory
+5. File is then executed from system memory
 
 
-1) Reads File. 
 
-2) Encrypts content via XOR
 
-3) Writes encrypted data to Stub's resource
 
-4) Outputs crypted file.
+
+Downloading and Contributing
+=============================
+1. Fork the project
