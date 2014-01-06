@@ -74,7 +74,7 @@ void Resource(int id)
 {
 	size_t Rsize;
 
-	HRSRC hResource = FindResource(NULL, MAKEINTRESOURCE(1), RT_RCDATA);
+	HRSRC hResource = FindResource(NULL, MAKEINTRESOURCE(id), RT_RCDATA);
 	HGLOBAL temp = LoadResource(NULL, hResource);
 	Rsize = SizeofResource(NULL, hResource);
 	RData.resize(Rsize);
@@ -112,7 +112,7 @@ void enc()
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 
-	Resource(1);
+	Resource(10);
 	enc();
 
 	LPVOID pFile;

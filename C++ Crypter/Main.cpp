@@ -72,7 +72,7 @@ void RDF() //The Function that Reads the File and Copies the stub
 	CopyFile("stub.exe", output/*L"Crypted.exe"*/, 0);// Copy stub , so we done need to download a new one each time we crypt
 	// ofcourse we can just update the resources with new data but whatever
 	cout << "\nGetting the HANDLE of the file to be crypted\n";
-	HANDLE efile = CreateFile(name, GENERIC_ALL, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);	
+	HANDLE efile = CreateFileA(name, GENERIC_ALL,FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);	
 	//^ Get the handle of the file to be crypted
 	cout << "Getting the File size\n";
 	fs = GetFileSize(efile, NULL);
@@ -138,7 +138,8 @@ void WriteToResources(LPTSTR szTargetPE, int id, LPBYTE lpBytes, DWORD dwSize) /
 	cout << "Writing Encrypted data to stub's resources\n";
 	HANDLE hResource = NULL;
 	hResource = BeginUpdateResource(szTargetPE, FALSE);
-	UpdateResource(hResource, RT_RCDATA, MAKEINTRESOURCE(id), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPVOID)lpBytes, dwSize);
+	//LPVOID lpResLock = LockResource(lpBytes);
+	UpdateResource(hResource, RT_RCDATA, MAKEINTRESOURCE(id), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),(LPVOID)lpBytes, dwSize);
 	EndUpdateResource(hResource, FALSE);
 }
 
@@ -150,7 +151,7 @@ int main() // The main function (Entry point)
 	enc();
 	file_data.push_back(choice);
 	cout << fs << endl;
-	WriteToResources(output, 1, (BYTE *)file_data.data(), file_data.size());
+	WriteToResources(output, 10, (BYTE *)file_data.data(), file_data.size());
 	cout << "Your File Got Crypted\n";
 	system("PAUSE");
 }
